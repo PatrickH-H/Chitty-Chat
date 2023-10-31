@@ -1,0 +1,12 @@
+Listening @ : 5000
+@Lamport-time 1 participant { 340196 } joined the chat-room
+@Lamport-time 2 participant { 116629 } joined the chat-room
+@Lamport-time 3 participant { 724845 } joined the chat-room
+@Lamport-time 4 participant { 724845 } send the message: { Hej }
+@Lamport-time 5 participant { 116629 } send the message: { Nej }
+@Lamport-time 6 participant { 340196 } send the message: { Heller ikke mig }
+@Lamport-time 7 participant { 340196 } left the chat-room
+@Lamport-time 8 participant { 116629 } send the message: { Njema }
+@Lamport-time 9 participant { 116629 } left the chat-room
+@Lamport-time 10 participant { 724845 } left the chat-room
+

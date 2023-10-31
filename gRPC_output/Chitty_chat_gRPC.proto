@@ -1,0 +1,12 @@
+syntax = "proto3";
+option go_package = "Chitty-Chat/gRPC_output";
+package gRPC_output;
+service MessageHandler{
+  rpc SendMessage(stream Message) returns (stream Message){}
+}
+message Message {
+  // Time of message
+  int64 timestamp = 1;
+  // The message to be sent.
+  string message = 2;
+}
