@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+//the following code has taken inspiration from https://www.youtube.com/watch?v=pRSKJIt3PYU&t=118s
+
 type messageHandlerServer struct {
 	savedMessages []messageUnit
 	clients       map[int]gRPC_output.MessageHandler_SendMessageServer
@@ -17,7 +19,6 @@ type messageHandlerServer struct {
 	mu            sync.Mutex
 }
 type messageUnit struct {
-	ClientName       string
 	Message          string
 	ClientUniqueCode int
 	Timestamp        int64
@@ -26,7 +27,7 @@ type messageUnit struct {
 var handler = messageHandlerServer{}
 
 type ChatServer struct {
-	gRPC_output.UnimplementedMessageHandlerServer
+	gRPC_output.UnimplementedMessageHandlerServer //This has to be there otherwise it wont run (Does not implement gRPC_output.MessageHandleServer
 }
 
 func (s *ChatServer) SendMessage(handlere gRPC_output.MessageHandler_SendMessageServer) error {
@@ -58,6 +59,7 @@ func getMessage(stream gRPC_output.MessageHandler_SendMessageServer, clientUniqu
 	for {
 		message, err := stream.Recv()
 		if err != nil {
+			Logger.ErrorLogger.Println(err)
 			<-errorHandler
 		} else {
 			handler.mu.Lock()
@@ -77,7 +79,6 @@ func sendMessage(errorHandler chan error) error {
 		for {
 			time.Sleep(500 * time.Millisecond)
 			handler.mu.Lock()
-
 			if len(handler.savedMessages) == 0 {
 				handler.mu.Unlock()
 				break
@@ -99,7 +100,9 @@ func sendMessage(errorHandler chan error) error {
 			for uniqueCode, element := range handler.clients {
 				if sender != uniqueCode {
 					err := element.Send(sendMssg)
+					Logger.FileLogger.Println("@Lamport-time", handler.Timestamp, "publishing {", sendMssg.Message, "} to {", uniqueCode, "}")
 					if err != nil {
+						Logger.ErrorLogger.Println(err)
 						<-errorHandler
 					}
 				}

@@ -1,12 +1,10 @@
 Listening @ : 5000
-@Lamport-time 1 participant { 340196 } joined the chat-room
-@Lamport-time 2 participant { 116629 } joined the chat-room
-@Lamport-time 3 participant { 724845 } joined the chat-room
-@Lamport-time 4 participant { 724845 } send the message: { Hej }
-@Lamport-time 5 participant { 116629 } send the message: { Nej }
-@Lamport-time 6 participant { 340196 } send the message: { Heller ikke mig }
-@Lamport-time 7 participant { 340196 } left the chat-room
-@Lamport-time 8 participant { 116629 } send the message: { Njema }
-@Lamport-time 9 participant { 116629 } left the chat-room
-@Lamport-time 10 participant { 724845 } left the chat-room
-
+@Lamport-time 1 participant { 762656 } joined the chat-room
+@Lamport-time 2 participant { 762656 } send the message: { Tester }
+@Lamport-time 3 participant { 762656 } send the message: { lamport }
+@Lamport-time 4 participant { 762656 } send the message: { time }
+@Lamport-time 5 participant { 762656 } send the message: { nu }
+@Lamport-time 6 participant { 762656 } send the message: { hej }
+@Lamport-time 7 participant { 16411 } joined the chat-room
+@Lamport-time 8 participant { 16411 } send the message: { Hej }
+@Lamport-time 8 publishing { Hej } to { 762656 }

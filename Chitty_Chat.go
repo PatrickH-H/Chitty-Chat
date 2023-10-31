@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	Port := os.Getenv("PORT")
 	if Port == "" {
 		Port = "5000"
@@ -19,11 +18,8 @@ func main() {
 	if err != nil {
 		Logger.ErrorLogger.Fatalf("Could not listen @ %v :: %v", Port, err)
 	}
-	Logger.FileLogger.Println("Listening @ : " + Port)
 	grpcServer := grpc.NewServer()
-
 	server := ServerStruct.ChatServer{}
-
 	gRPC_output.RegisterMessageHandlerServer(grpcServer, &server)
 	err = grpcServer.Serve(listen)
 	if err != nil {

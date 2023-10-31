@@ -1,6 +1,8 @@
 package main
 
+//the following code has taken inspiration from https://www.youtube.com/watch?v=pRSKJIt3PYU&t=118s
 import (
+	"Chitty-Chat/Logger"
 	pb "Chitty-Chat/gRPC_output"
 	"bufio"
 	"context"
@@ -21,11 +23,10 @@ type clientHandle struct {
 
 func main() {
 	fmt.Println("Enter port number")
-
 	reader := bufio.NewReader(os.Stdin)
 	serverID, err := reader.ReadString('\n')
 	if err != nil {
-		log.Printf("Failed to read from console %v", err)
+		Logger.ErrorLogger.Println(err)
 	}
 	serverID = strings.Trim(serverID, "\r\n")
 
@@ -34,44 +35,30 @@ func main() {
 	conn, err := grpc.Dial(serverID, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
-		log.Fatalf("Failed to connect to gRPC server %v", err)
+		Logger.ErrorLogger.Println(err)
 	}
 	defer conn.Close()
-
 	client := pb.NewMessageHandlerClient(conn)
 
 	stream, err := client.SendMessage(context.Background())
 
 	if err != nil {
-		log.Fatalf("Failed to call SendMessage %v", err)
+		Logger.ErrorLogger.Println(err)
 	}
 	ch := clientHandle{stream: stream, lamportTimestamp: 0}
-	//ch.clientConfig()
+
 	go ch.sendMessage()
 	go ch.receiveMessage()
 
 	bl := make(chan bool)
 	<-bl
-
 }
-
-func (ch *clientHandle) clientConfig() {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Printf("Your name: ")
-	name, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatalf("Failed to read from console %v", err)
-	}
-	ch.clientName = strings.Trim(name, "\r\n")
-}
-
 func (ch *clientHandle) sendMessage() {
 	for {
 		reader := bufio.NewReader(os.Stdin)
-
 		clientMessage, err := reader.ReadString('\n')
 		if err != nil {
-			log.Fatalf("Failed to read from console %v", err)
+			Logger.ErrorLogger.Println(err)
 		}
 		clientMessage = strings.Trim(clientMessage, "\r\n")
 		if clientMessage == "quit" {
@@ -90,7 +77,7 @@ func (ch *clientHandle) sendMessage() {
 			err = ch.stream.Send(clientMessageBox)
 
 			if err != nil {
-				log.Printf("Error while sending message %v", err)
+				Logger.ErrorLogger.Println(err)
 			}
 		}
 		ch.lamportTimestamp++
@@ -106,7 +93,7 @@ func (ch *clientHandle) receiveMessage() {
 		}
 		ch.lamportTimestamp++
 		if err != nil {
-			log.Printf("Error in receiving message from server :: %v", err)
+			Logger.ErrorLogger.Println(err)
 		}
 		fmt.Printf("@Lamport-time %d - %s\n", mssg.Timestamp, mssg.Message)
 
